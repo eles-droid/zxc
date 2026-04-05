@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ДЫМOFF — Горячий дым. Тёплый отдых.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Crimson+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #0e0805;
+  --bg2:      #140d08;
+  --ember:    #ff6b1a;
+  --amber:    #ffab40;
+  --gold:     #ffd080;
+  --red:      #c0392b;
+  --smoke:    rgba(180,140,100,0.08);
+  --surface:  rgba(255,160,60,0.07);
+  --border:   rgba(255,160,60,0.14);
+  --text:     #f0e0c8;
+  --muted:    rgba(240,224,200,0.45);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Crimson Pro',Georgia,serif;
+  font-weight:300;
+  overflow-x:hidden;
+}
+
+/* ── GRAIN ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:9000;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  opacity:.04;mix-blend-mode:overlay;
+}
+
+/* ── SCROLL INDICATOR ── */
+#prog{position:fixed;top:0;left:0;height:2px;z-index:8999;width:0%;background:linear-gradient(90deg,var(--red),var(--ember),var(--amber));box-shadow:0 0 8px var(--ember);transition:width .1s linear}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  padding:1.1rem 2rem;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(14,8,5,.75);backdrop-filter:blur(18px);
+  border-bottom:1px solid rgba(255,107,26,.12);
+}
+.nav-logo{
+  font-family:'Oswald',sans-serif;font-size:1.6rem;font-weight:700;
+  letter-spacing:.12em;text-decoration:none;
+  background:linear-gradient(135deg,var(--gold),var(--ember));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 10px rgba(255,107,26,.5));
+}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-family:'Crimson Pro',serif;font-size:.95rem;letter-spacing:.1em;transition:color .2s}
+.nav-links a:hover{color:var(--amber)}
+@media(max-width:580px){.nav-links{display:none}}
+
+/* ── HERO ── */
+.hero{
+  position:relative;min-height:100svh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;text-align:center;
+  background:radial-gradient(ellipse 80% 60% at 50% 90%,rgba(180,60,0,.35) 0%,transparent 70%),
+              radial-gradient(ellipse 60% 40% at 30% 60%,rgba(100,30,0,.2) 0%,transparent 60%),
+              var(--bg);
+}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-content{position:relative;z-index:10;padding:2rem 1.5rem}
+
+.hero-eyebrow{
+  font-family:'Crimson Pro',serif;font-size:.8rem;letter-spacing:.5em;
+  text-transform:uppercase;color:rgba(255,171,64,.6);margin-bottom:1.4rem;
+  animation:fadeUp .8s .3s ease-out both;
+}
+.hero-title{
+  font-family:'Oswald',sans-serif;font-weight:700;
+  font-size:clamp(5rem,20vw,13rem);letter-spacing:.04em;
+  line-height:.9;
+  background:linear-gradient(175deg,var(--gold) 0%,var(--amber) 35%,var(--ember) 70%,var(--red) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 60px rgba(255,107,26,.4));
+  animation:fadeUp .9s .1s ease-out both, flamePulse 4s 1.5s ease-in-out infinite;
+}
+@keyframes flamePulse{
+  0%,100%{filter:drop-shadow(0 0 40px rgba(255,107,26,.4))}
+  50%{filter:drop-shadow(0 0 80px rgba(255,107,26,.7)) drop-shadow(0 0 120px rgba(200,60,0,.3))}
+}
+.hero-sub{
+  font-family:'Crimson Pro',serif;font-size:clamp(1.1rem,3vw,1.5rem);
+  font-weight:300;letter-spacing:.12em;color:rgba(240,200,150,.7);
+  margin-top:1rem;text-transform:uppercase;
+  animation:fadeUp .8s .5s ease-out both;
+}
+.divider-fire{
+  display:flex;align-items:center;gap:1rem;margin:2rem auto;width:fit-content;
+  animation:fadeUp .8s .7s ease-out both;
+}
+.divider-fire::before,.divider-fire::after{content:'';width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,171,64,.5))}
+.divider-fire::after{background:linear-gradient(90deg,rgba(255,171,64,.5),transparent)}
+.ember-icon{color:var(--ember);font-size:1rem}
+
+.btn-fire{
+  display:inline-block;padding:1rem 3rem;
+  border:1px solid rgba(255,107,26,.5);border-radius:4px;
+  font-family:'Oswald',sans-serif;font-size:1rem;letter-spacing:.25em;text-transform:uppercase;
+  text-decoration:none;color:var(--gold);
+  background:rgba(180,60,0,.2);backdrop-filter:blur(8px);
+  position:relative;overflow:hidden;
+  animation:fadeUp .8s .9s ease-out both, glowPulse 3s 2s ease-in-out infinite;
+  transition:transform .2s,box-shadow .3s;
+}
+.btn-fire::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,107,26,.3),rgba(200,60,0,.2));
+  opacity:0;transition:opacity .3s;
+}
+.btn-fire span{position:relative;z-index:1}
+.btn-fire:hover::before{opacity:1}
+.btn-fire:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,107,26,.4)}
+@keyframes glowPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(255,107,26,.3)}
+  50%{box-shadow:0 0 25px 4px rgba(255,107,26,.2)}
+}
+
+/* ── COMMON SECTION ── */
+section{padding:6rem 1.5rem;position:relative}
+.container{max-width:1160px;margin:0 auto}
+.sec-eyebrow{
+  font-family:'Crimson Pro',serif;font-size:.75rem;letter-spacing:.45em;text-transform:uppercase;
+  color:var(--ember);margin-bottom:.6rem;
+}
+.sec-title{
+  font-family:'Oswald',sans-serif;font-weight:700;
+  font-size:clamp(2rem,7vw,4rem);letter-spacing:.04em;
+  background:linear-gradient(135deg,var(--gold),var(--amber));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:.8rem;
+  filter:drop-shadow(0 0 20px rgba(255,171,64,.25));
+}
+.sec-sub{color:var(--muted);font-size:1.05rem;line-height:1.7;margin-bottom:3rem;max-width:480px}
+
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.6rem}
+
+/* ── EMBER CARD ── */
+.ember-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:8px;padding:2rem 1.8rem;
+  position:relative;overflow:hidden;
+  transition:transform .3s,box-shadow .3s,border-color .3s;
+  opacity:0;transform:translateY(28px);
+}
+.ember-card.visible{animation:fadeUp .65s ease-out forwards}
+.ember-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(255,107,26,.12) 0%,transparent 70%);
+  opacity:0;transition:opacity .35s;
+}
+.ember-card:hover{transform:translateY(-6px) scale(1.02);border-color:rgba(255,107,26,.4)}
+.ember-card:hover::before{opacity:1}
+.ember-card:hover{box-shadow:0 12px 50px rgba(255,107,26,.2),0 0 0 1px rgba(255,107,26,.12)}
+
+.card-glow{
+  position:absolute;bottom:-20px;left:50%;transform:translateX(-50%);
+  width:80%;height:40px;
+  background:radial-gradient(ellipse,rgba(255,107,26,.3) 0%,transparent 70%);
+  pointer-events:none;opacity:0;transition:opacity .35s;
+}
+.ember-card:hover .card-glow{opacity:1}
+
+.card-icon{font-size:2.4rem;margin-bottom:1rem;display:block;filter:drop-shadow(0 0 8px rgba(255,107,26,.5))}
+.card-name{
+  font-family:'Oswald',sans-serif;font-size:1.15rem;font-weight:600;
+  letter-spacing:.06em;margin-bottom:.4rem;color:var(--gold);
+}
+.card-desc{color:var(--muted);font-size:.9rem;line-height:1.65;margin-bottom:1.2rem}
+.card-price{
+  font-family:'Oswald',sans-serif;font-size:1.6rem;font-weight:700;
+  background:linear-gradient(90deg,var(--ember),var(--amber));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+
+/* intensity dots */
+.heat{display:flex;gap:5px;margin-bottom:.9rem}
+.heat-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,107,26,.15);transition:background .3s}
+.heat-dot.on{background:var(--ember);box-shadow:0 0 6px var(--ember)}
+
+/* ── SECTION THEMES ── */
+.hookah-section{background:radial-gradient(ellipse 70% 50% at 50% 100%,rgba(180,50,0,.12) 0%,transparent 70%)}
+.snacks-section{background:radial-gradient(ellipse 60% 40% at 80% 50%,rgba(200,100,0,.08) 0%,transparent 60%)}
+.tea-section{background:radial-gradient(ellipse 60% 50% at 20% 50%,rgba(160,100,20,.1) 0%,transparent 60%)}
+.drinks-section{background:radial-gradient(ellipse 60% 40% at 60% 50%,rgba(120,60,0,.08) 0%,transparent 60%)}
+
+/* steam animation on tea cards */
+.steam-wrap{position:absolute;top:10px;right:16px}
+.steam-line{
+  width:3px;border-radius:10px;
+  background:rgba(255,220,150,.18);
+  animation:steamRise 2.5s ease-in-out infinite;
+  display:inline-block;margin:0 3px;
+}
+.steam-line:nth-child(1){height:18px;animation-delay:0s}
+.steam-line:nth-child(2){height:24px;animation-delay:.5s}
+.steam-line:nth-child(3){height:14px;animation-delay:1s}
+@keyframes steamRise{0%,100%{transform:translateY(0) scaleX(1);opacity:.18}50%{transform:translateY(-10px) scaleX(1.5);opacity:.04}}
+
+/* ── SEP ── */
+.sep{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,107,26,.15),transparent)}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+nav{animation:fadeDown .7s ease-out both}
+@keyframes fadeDown{from{opacity:0;transform:translateY(-18px)}to{opacity:1;transform:translateY(0)}}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<nav>
+  <a class="nav-logo" href="#">ДЫМOFF</a>
+  <ul class="nav-links">
+    <li><a href="#hookahs">Кальяны</a></li>
+    <li><a href="#snacks">Закуски</a></li>
+    <li><a href="#tea">Чай</a></li>
+    <li><a href="#drinks">Напитки</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Кальянный лаунж · Открыто</p>
+    <h1 class="hero-title">ДЫМOFF</h1>
+    <p class="hero-sub">Горячий дым. Тёплый отдых.</p>
+    <div class="divider-fire"><span class="ember-icon">🔥</span></div>
+    <a href="#hookahs" class="btn-fire"><span>Открыть меню</span></a>
+  </div>
+  <div class="scroll-hint"><span>Листай</span><div class="scroll-arrow"></div></div>
+</section>
+
+<div class="sep"></div>
+
+<!-- HOOKAHS -->
+<section class="hookah-section" id="hookahs">
+  <div class="container">
+    <div style="margin-bottom:3rem">
+      <p class="sec-eyebrow">— Наши кальяны</p>
+      <h2 class="sec-title">Кальяны</h2>
+      <p class="sec-sub">Отборный табак, настоящие угли и мастерская набивка — каждый кальян горит именно так, как вам нужно.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <span class="card-icon">🌬️</span>
+        <div class="heat"><div class="heat-dot on"></div><div class="heat-dot"></div><div class="heat-dot"></div></div>
+        <div class="card-name">Лёгкий</div>
+        <div class="card-desc">Мягкие фруктовые миксы. Лёгкий дым, долгое удовольствие.</div>
+        <div class="card-price">800 ₽</div>
+      </div>
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <span class="card-icon">💨</span>
+        <div class="heat"><div class="heat-dot on"></div><div class="heat-dot on"></div><div class="heat-dot"></div></div>
+        <div class="card-name">Средний</div>
+        <div class="card-desc">Густой, насыщенный дым. Идеальный баланс силы и вкуса.</div>
+        <div class="card-price">900 ₽</div>
+      </div>
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <span class="card-icon">🔥</span>
+        <div class="heat"><div class="heat-dot on"></div><div class="heat-dot on"></div><div class="heat-dot on"></div></div>
+        <div class="card-name">Тяжёлый</div>
+        <div class="card-desc">Максимальная густота. Для тех, кто знает толк в дыме.</div>
+        <div class="card-price">1 100 ₽</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- SNACKS -->
+<section class="snacks-section" id="snacks">
+  <div class="container">
+    <div style="margin-bottom:3rem">
+      <p class="sec-eyebrow">— Закуски</p>
+      <h2 class="sec-title">Снеки</h2>
+      <p class="sec-sub">Хрустящее дополнение к вашему кальяну.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <span class="card-icon">🥩</span>
+        <div class="card-name">Чипсы «Шашлык»</div>
+        <div class="card-desc">Дымный, пряный вкус мяса с огня.</div>
+        <div class="card-price">150 ₽</div>
+      </div>
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <span class="card-icon">🌿</span>
+        <div class="card-name">Чипсы «Сметана и зелень»</div>
+        <div class="card-desc">Нежный сливочный вкус со свежей зеленью.</div>
+        <div class="card-price">150 ₽</div>
+      </div>
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <span class="card-icon">🦀</span>
+        <div class="card-name">Чипсы «Краб»</div>
+        <div class="card-desc">Морской вкус с пикантной ноткой.</div>
+        <div class="card-price">150 ₽</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- TEA -->
+<section class="tea-section" id="tea">
+  <div class="container">
+    <div style="margin-bottom:3rem">
+      <p class="sec-eyebrow">— Чай</p>
+      <h2 class="sec-title">Чай</h2>
+      <p class="sec-sub">Горячий ароматный чай из разных уголков мира.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <div class="steam-wrap"><div class="steam-line"></div><div class="steam-line"></div><div class="steam-line"></div></div>
+        <span class="card-icon">🫖</span>
+        <div class="card-name">Марокканский</div>
+        <div class="card-desc">Мятный чай с пряностями и мёдом.</div>
+        <div class="card-price">250 ₽</div>
+      </div>
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <div class="steam-wrap"><div class="steam-line"></div><div class="steam-line"></div><div class="steam-line"></div></div>
+        <span class="card-icon">🍵</span>
+        <div class="card-name">Казахский</div>
+        <div class="card-desc">Крепкий чёрный чай с молоком по степному рецепту.</div>
+        <div class="card-price">250 ₽</div>
+      </div>
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <div class="steam-wrap"><div class="steam-line"></div><div class="steam-line"></div><div class="steam-line"></div></div>
+        <span class="card-icon">🌸</span>
+        <div class="card-name">Узбекский</div>
+        <div class="card-desc">Зелёный чай с ароматными травами.</div>
+        <div class="card-price">250 ₽</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- DRINKS -->
+<section class="drinks-section" id="drinks">
+  <div class="container">
+    <div style="margin-bottom:3rem">
+      <p class="sec-eyebrow">— Напитки</p>
+      <h2 class="sec-title">Напитки</h2>
+      <p class="sec-sub">Освежающие безалкогольные напитки к вашему вечеру.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <span class="card-icon">🥤</span>
+        <div class="card-name">Кола</div>
+        <div class="card-desc">Классическая Coca-Cola. 1 литр.</div>
+        <div class="card-price">120 ₽</div>
+      </div>
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <span class="card-icon">🍊</span>
+        <div class="card-name">Фанта</div>
+        <div class="card-desc">Яркая апельсиновая Fanta. 1 литр.</div>
+        <div class="card-price">120 ₽</div>
+      </div>
+      <div class="ember-card">
+        <div class="card-glow"></div>
+        <span class="card-icon">🍹</span>
+        <div class="card-name">Сок</div>
+        <div class="card-desc">Натуральный сок на выбор. 1 литр.</div>
+        <div class="card-price">120 ₽</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ── SCROLL PROGRESS ── */
+window.addEventListener('scroll',()=>{
+  const p=window.scrollY/(document.body.scrollHeight-window.innerHeight);
+  document.getElementById('prog').style.width=(p*100)+'%';
+},{passive:true});
+
+/* ── PARALLAX HERO ── */
+window.addEventListener('scroll',()=>{
+  const hc=document.querySelector('.hero-content');
+  if(hc)hc.style.transform=`translateY(${window.scrollY*.22}px)`;
+},{passive:true});
+
+/* ── PARTICLE ENGINE ── */
+function makeParticleEngine(canvasId, config){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let W,H,particles=[];
+
+  function resize(){
+    W=canvas.width=canvas.offsetWidth;
+    H=canvas.height=canvas.offsetHeight;
+  }
+  resize();
+  const ro=new ResizeObserver(resize);
+  ro.observe(canvas.parentElement);
+
+  class Particle{
+    constructor(){this.reset()}
+    reset(){
+      this.type=Math.random()<config.smokeRatio?'smoke':'spark';
+      if(this.type==='smoke'){
+        this.x=W*(.15+Math.random()*.7);
+        this.y=H+30;
+        this.vx=(Math.random()-.5)*.5;
+        this.vy=-(config.smokeSpeed||.5)*(0.6+Math.random());
+        this.r=20+Math.random()*50;
+        this.alpha=0;
+        this.targetAlpha=.04+Math.random()*.07;
+        this.life=0;
+        this.maxLife=200+Math.random()*160;
+        this.hue=18+Math.random()*20;
+        this.sat=40+Math.random()*30;
+      } else {
+        this.x=W*(.2+Math.random()*.6);
+        this.y=H*(.5+Math.random()*.5);
+        this.vx=(Math.random()-.5)*1.5;
+        this.vy=-(1.5+Math.random()*3);
+        this.r=1+Math.random()*2.5;
+        this.alpha=0;
+        this.life=0;
+        this.maxLife=40+Math.random()*60;
+        this.hue=20+Math.random()*30;
+      }
+    }
+    update(){
+      this.life++;
+      if(this.type==='smoke'){
+        this.x+=this.vx;
+        this.y+=this.vy;
+        this.r+=.2;
+        this.vx+=(Math.random()-.5)*.04;
+        const p=this.life/this.maxLife;
+        if(p<.25)this.alpha=this.targetAlpha*(p/.25);
+        else if(p>.65)this.alpha=this.targetAlpha*(1-(p-.65)/.35);
+        else this.alpha=this.targetAlpha;
+      } else {
+        this.x+=this.vx;
+        this.y+=this.vy;
+        this.vy+=.05;
+        this.vx*=.97;
+        const p=this.life/this.maxLife;
+        this.alpha=p<.3?(p/.3):(1-p);
+        this.alpha*=.9;
+      }
+      if(this.life>=this.maxLife)this.reset();
+    }
+    draw(){
+      if(this.type==='smoke'){
+        const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r);
+        g.addColorStop(0,`hsla(${this.hue},${this.sat}%,55%,${this.alpha})`);
+        g.addColorStop(1,`hsla(${this.hue},${this.sat}%,30%,0)`);
+        ctx.fillStyle=g;
+        ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill();
+      } else {
+        const g=ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r*3);
+        g.addColorStop(0,`hsla(${this.hue},90%,80%,${this.alpha})`);
+        g.addColorStop(.3,`hsla(${this.hue},80%,60%,${this.alpha*.6})`);
+        g.addColorStop(1,`hsla(${this.hue},80%,40%,0)`);
+        ctx.fillStyle=g;
+        ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill();
+      }
+    }
+  }
+
+  const total=config.count||25;
+  for(let i=0;i<total;i++){
+    const p=new Particle();
+    p.life=Math.random()*p.maxLife;
+    particles.push(p);
+  }
+
+  let raf;
+  function loop(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{p.update();p.draw();});
+    raf=requestAnimationFrame(loop);
+  }
+
+  const io=new IntersectionObserver(entries=>{
+    if(entries[0].isIntersecting){loop();}
+    else{cancelAnimationFrame(raf);}
+  },{threshold:.01});
+  io.observe(canvas.parentElement);
+}
+
+makeParticleEngine('hero-canvas',{smokeRatio:.65,smokeSpeed:.55,count:30});
+
+/* ── CARD REVEAL ── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:.12});
+document.querySelectorAll('.ember-card').forEach((el,i)=>{
+  el.style.animationDelay=(i%3*.13)+'s';
+  io.observe(el);
+});
+
+/* ── SPARK ON CLICK ── */
+document.addEventListener('click',e=>{
+  const canvas=document.createElement('canvas');
+  canvas.style.cssText=`position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9990`;
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  document.body.appendChild(canvas);
+  const ctx=canvas.getContext('2d');
+  const sparks=Array.from({length:12},()=>({
+    x:e.clientX,y:e.clientY,
+    vx:(Math.random()-.5)*5,vy:(Math.random()-1)*6,
+    r:1+Math.random()*2,life:0,maxLife:35+Math.random()*25,
+    hue:15+Math.random()*25
+  }));
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    let alive=false;
+    sparks.forEach(s=>{
+      s.life++;s.x+=s.vx;s.y+=s.vy;s.vy+=.18;s.vx*=.97;
+      const p=s.life/s.maxLife;
+      const a=1-p;
+      if(a>0){
+        alive=true;
+        const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r*3);
+        g.addColorStop(0,`hsla(${s.hue},90%,80%,${a})`);
+        g.addColorStop(1,`hsla(${s.hue},80%,50%,0)`);
+        ctx.fillStyle=g;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+      }
+    });
+    if(alive)requestAnimationFrame(draw);
+    else canvas.remove();
+  }
+  draw();
+});
+</script>
+</body>
+</html>
