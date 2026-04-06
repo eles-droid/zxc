@@ -334,7 +334,10 @@
     background: radial-gradient(ellipse 60% 40% at 20% 50%, rgba(79,195,247,.06) 0%, transparent 60%);
   }
 
-
+  /* ── ADDITIONS SECTION ── */
+  .additions-section {
+    background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(155,89,255,.08) 0%, transparent 70%);
+  }
 
   /* ── ANIMATIONS ── */
   @keyframes fadeUp {
@@ -349,10 +352,33 @@
     margin: 0 auto;
   }
 
-  /* ── PARALLAX WRAPPER ── */
-  .parallax-bg {
-    position: absolute; inset: 0; pointer-events: none;
-    will-change: transform;
+  /* ── FOOTER ── */
+  footer {
+    background: #06060f;
+    padding: 4rem 1.5rem 2rem;
+    text-align: center;
+    border-top: 1px solid var(--border);
+  }
+  .footer-text {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: var(--muted);
+    max-width: 680px;
+    margin: 0 auto 2rem;
+  }
+  .instagram-promo {
+    font-size: 1.25rem;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+  .insta-link {
+    color: var(--violet);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .insta-link:hover {
+    text-decoration: underline;
   }
 
   /* ── NAV ── */
@@ -417,7 +443,6 @@
     <li><a href="#snacks">Закуски</a></li>
     <li><a href="#tea">Чай</a></li>
     <li><a href="#drinks">Напитки</a></li>
-
   </ul>
 </nav>
 
@@ -550,6 +575,27 @@
 
 <div class="sep"></div>
 
+<!-- ДОПОЛНЕНИЯ -->
+<section class="additions-section" id="additions">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">— Дополнения к кальяну</p>
+      <h2 class="section-title">Дополнения</h2>
+      <p class="section-sub">Сделай свой кальян ещё ярче и вкуснее.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="glass-card">
+        <span class="card-icon">🍊</span>
+        <div class="card-name">Чаша апельсиновая</div>
+        <div class="card-desc">Фруктовая чаша из свежего апельсина. Добавляет яркий цитрусовый аромат и сочность дыму.</div>
+        <div class="card-price">+500 ₽ к цене кальяна</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
 <!-- SNACKS -->
 <section class="snacks-section" id="snacks">
   <div class="container">
@@ -650,7 +696,24 @@
   </div>
 </section>
 
+<div class="sep"></div>
 
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p class="footer-text">
+      Отметь нас в Instagram с фото или сторис из ДЫМOFF — и получи <strong>15% скидку на весь стол</strong> в следующий визит.<br>
+      <span style="color:#fff;">Просто покажи отметку администратору.</span>
+    </p>
+    <p class="instagram-promo">
+      Дым в кадре. Вайб в сердце.<br>
+      Тегай нас — и мы сделаем твой вечер ещё ярче 🔥
+    </p>
+    <p>
+      Instagram: <a href="https://instagram.com/dym_off94" target="_blank" class="insta-link">@dym_off94</a>
+    </p>
+  </div>
+</footer>
 
 <script>
 /* ── OPEN / CLOSED STATUS ── */
@@ -659,7 +722,6 @@
   const text = document.getElementById('status-text');
   const now = new Date();
   const h = now.getHours();
-  // Open: 20:00–04:00 (h >= 20 OR h < 4)
   const isOpen = h >= 20 || h < 4;
   if (isOpen) {
     dot.classList.remove('closed');
@@ -668,10 +730,8 @@
     dot.classList.add('closed');
     text.textContent = 'закрыто · открываемся в 20:00';
   }
-  // Re-check every minute
   setTimeout(updateStatus, 60000);
 })();
-
 
 window.addEventListener('scroll', () => {
   const p = window.scrollY / (document.body.scrollHeight - window.innerHeight);
@@ -704,7 +764,7 @@ function initSmoke(canvasId) {
       this.targetAlpha = .04 + Math.random() * .06;
       this.life = 0;
       this.maxLife = 180 + Math.random() * 120;
-      this.hue = 250 + Math.random() * 60; // violet-ish
+      this.hue = 250 + Math.random() * 60;
     }
     update() {
       this.life++;
@@ -731,7 +791,7 @@ function initSmoke(canvasId) {
 
   for (let i = 0; i < 18; i++) {
     const p = new Particle();
-    p.life = Math.random() * p.maxLife; // stagger
+    p.life = Math.random() * p.maxLife;
     particles.push(p);
   }
 
