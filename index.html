@@ -656,8 +656,8 @@
   const text = document.getElementById('status-text');
   const now = new Date();
   const h = now.getHours();
-  // Open: 22:00–04:00 (h >= 22 OR h < 4)
-  const isOpen = h >= 22 || h < 4;
+  // Open: 20:00–04:00 (h >= 20 OR h < 4)
+  const isOpen = h >= 20 || h < 4;
   if (isOpen) {
     dot.classList.remove('closed');
     text.textContent = 'ежедневно с 20:00 до 4:00';
