@@ -190,9 +190,56 @@
   /* ── GRID ── */
   .cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
+  @media(max-width: 560px) {
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ── COMBO CARD ── */
+  .combo-card {
+    background: linear-gradient(135deg, rgba(155,89,255,.1) 0%, rgba(244,114,182,.06) 100%);
+    border: 1px solid rgba(155,89,255,.3);
+    border-radius: 20px;
+    padding: 2rem 1.8rem;
+    backdrop-filter: blur(16px);
+    position: relative; overflow: hidden;
+    transition: transform .3s ease, box-shadow .3s ease, border-color .3s;
+    opacity: 0; transform: translateY(30px);
+  }
+  .combo-card.visible { animation: fadeUp .7s ease-out forwards; }
+  .combo-card::before {
+    content: ''; position: absolute; inset: 0; border-radius: 20px;
+    background: linear-gradient(135deg, rgba(155,89,255,.12) 0%, rgba(244,114,182,.08) 100%);
+    opacity: 0; transition: opacity .3s;
+  }
+  .combo-card:hover { transform: translateY(-6px) scale(1.02); border-color: rgba(155,89,255,.6); }
+  .combo-card:hover::before { opacity: 1; }
+  .combo-card:hover { box-shadow: 0 8px 50px rgba(155,89,255,.35), 0 0 0 1px rgba(155,89,255,.2); }
+  .combo-badge {
+    display: inline-block; padding: .2rem .7rem; border-radius: 50px;
+    background: linear-gradient(90deg, var(--violet), var(--pink));
+    font-family: 'Orbitron', sans-serif; font-size: .55rem; letter-spacing: .15em;
+    text-transform: uppercase; color: #fff; margin-bottom: 1rem;
+    box-shadow: 0 0 12px var(--violet-glow);
+  }
+  .combo-title {
+    font-family: 'Orbitron', sans-serif; font-size: 1rem; font-weight: 700;
+    letter-spacing: .04em; margin-bottom: .8rem; color: #fff;
+  }
+  .combo-items { list-style: none; margin-bottom: 1.2rem; }
+  .combo-items li {
+    font-size: .82rem; color: var(--muted); padding: .2rem 0;
+    display: flex; align-items: center; gap: .5rem;
+  }
+  .combo-items li::before { content: '·'; color: var(--violet); font-size: 1.2rem; line-height: 0; }
+  .combo-price {
+    font-family: 'Orbitron', sans-serif; font-size: 1.5rem; font-weight: 700;
+    background: linear-gradient(90deg, var(--violet), var(--pink));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .combo-savings { font-size: .7rem; color: rgba(155,89,255,.7); margin-top: .3rem; letter-spacing: .05em; }
 
   /* ── GLASS CARD ── */
   .glass-card {
@@ -353,6 +400,7 @@
   }
   .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80;
     box-shadow: 0 0 8px #4ade80; animation: blink 2s ease-in-out infinite; }
+  .badge-dot.closed { background: #f87171; box-shadow: 0 0 8px #f87171; animation: none; }
   @keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
 </style>
 </head>
@@ -364,6 +412,7 @@
 <nav>
   <a class="nav-logo" href="#">ДЫМOFF</a>
   <ul class="nav-links">
+    <li><a href="#combos">Комбо</a></li>
     <li><a href="#hookahs">Кальяны</a></li>
     <li><a href="#snacks">Закуски</a></li>
     <li><a href="#tea">Чай</a></li>
@@ -376,7 +425,7 @@
 <section class="hero" id="home">
   <canvas id="smoke-canvas"></canvas>
   <div class="hero-content">
-    <div class="badge"><span class="badge-dot"></span>Открыто сейчас</div>
+    <div class="badge" id="status-badge"><span class="badge-dot" id="status-dot"></span><span id="status-text">ежедневно с 20:00 до 4:00</span></div>
     <h1 class="logo">ДЫМOFF</h1>
     <p class="tagline">Лаунж пространство для отдыха</p>
     <div class="divider-line"></div>
@@ -385,6 +434,55 @@
   <div class="scroll-hint">
     <span>Скролл</span>
     <div class="arrow"></div>
+  </div>
+</section>
+
+<div class="sep"></div>
+
+<!-- COMBOS -->
+<section class="hookah-section" id="combos">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-label">— Выгодные предложения</p>
+      <h2 class="section-title">Комбо</h2>
+      <p class="section-sub">Больше удовольствия — меньше затрат. Собрали лучшие сеты для вашего вечера.</p>
+    </div>
+    <div class="cards-grid">
+      <div class="combo-card">
+        <div class="combo-badge">🔥 Хит</div>
+        <div class="combo-title">Вдвоём в дыму</div>
+        <ul class="combo-items">
+          <li>1 Кальян Средний</li>
+          <li>2 Чипсы на выбор</li>
+          <li>2 Чая на выбор</li>
+        </ul>
+        <div class="combo-price">1 590 ₽</div>
+        <div class="combo-savings">Выгода 160 ₽</div>
+      </div>
+      <div class="combo-card">
+        <div class="combo-badge">💜 Популярное</div>
+        <div class="combo-title">Крепкий дуэт</div>
+        <ul class="combo-items">
+          <li>1 Кальян Крепкий</li>
+          <li>2 Чипсы на выбор</li>
+          <li>2 Напитка (Кола / Фанта / Dizzy)</li>
+        </ul>
+        <div class="combo-price">1 550 ₽</div>
+        <div class="combo-savings">Выгода 200 ₽</div>
+      </div>
+      <div class="combo-card" style="grid-column: 1 / -1;">
+        <div class="combo-badge">🎉 Вечеринка</div>
+        <div class="combo-title">ДымOFF Party</div>
+        <ul class="combo-items" style="columns: 2; gap: 1rem;">
+          <li>1 Кальян Крепкий</li>
+          <li>Замена чаши</li>
+          <li>4 Чипсы на выбор</li>
+          <li>4 Напитка (Кола / Фанта)</li>
+        </ul>
+        <div class="combo-price">2 490 ₽</div>
+        <div class="combo-savings">Выгода 510 ₽</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -408,7 +506,7 @@
         </div>
         <div class="card-name">Лёгкий</div>
         <div class="card-desc">Мягкие фруктовые миксы. Идеально для первого знакомства или долгого вечера.</div>
-        <div class="card-price">800 ₽</div>
+        <div class="card-price">900 ₽</div>
       </div>
       <div class="glass-card">
         <span class="card-icon">💨</span>
@@ -419,7 +517,7 @@
         </div>
         <div class="card-name">Средний</div>
         <div class="card-desc">Насыщенный вкус и плотный дым. Оптимальный баланс для большинства гостей.</div>
-        <div class="card-price">900 ₽</div>
+        <div class="card-price">1 000 ₽</div>
       </div>
       <div class="glass-card">
         <span class="card-icon">🔥</span>
@@ -428,9 +526,20 @@
           <div class="intensity-dot active"></div>
           <div class="intensity-dot active"></div>
         </div>
-        <div class="card-name">Тяжёлый</div>
+        <div class="card-name">Крепкий</div>
         <div class="card-desc">Крепкий микс для настоящих ценителей. Максимальная густота и интенсивность.</div>
         <div class="card-price">1 100 ₽</div>
+      </div>
+      <div class="glass-card">
+        <span class="card-icon">🪔</span>
+        <div class="intensity">
+          <div class="intensity-dot"></div>
+          <div class="intensity-dot"></div>
+          <div class="intensity-dot"></div>
+        </div>
+        <div class="card-name">Замена чаши</div>
+        <div class="card-desc">Свежая забивка без перерыва — продолжай вечер с новым вкусом.</div>
+        <div class="card-price">600 ₽</div>
       </div>
     </div>
   </div>
@@ -451,19 +560,19 @@
         <span class="card-icon">🥩</span>
         <div class="card-name">Чипсы «Шашлык»</div>
         <div class="card-desc">Насыщенный вкус копчёного мяса в каждом чипсе.</div>
-        <div class="card-price">150 ₽</div>
+        <div class="card-price">200 ₽</div>
       </div>
       <div class="glass-card">
         <span class="card-icon">🌿</span>
         <div class="card-name">Чипсы «Сметана и зелень»</div>
         <div class="card-desc">Нежный сливочный вкус со свежей зеленью.</div>
-        <div class="card-price">150 ₽</div>
+        <div class="card-price">200 ₽</div>
       </div>
       <div class="glass-card">
         <span class="card-icon">🦀</span>
         <div class="card-name">Чипсы «Краб»</div>
         <div class="card-desc">Морской вкус с лёгкой пикантностью.</div>
-        <div class="card-price">150 ₽</div>
+        <div class="card-price">200 ₽</div>
       </div>
     </div>
   </div>
@@ -520,19 +629,19 @@
         <span class="card-icon">🥤</span>
         <div class="card-name">Кола</div>
         <div class="card-desc">Классическая Coca-Cola. 1 литр.</div>
-        <div class="card-price">120 ₽</div>
+        <div class="card-price">150 ₽</div>
       </div>
       <div class="glass-card">
         <span class="card-icon">🍊</span>
         <div class="card-name">Фанта</div>
         <div class="card-desc">Яркая апельсиновая Fanta. 1 литр.</div>
-        <div class="card-price">120 ₽</div>
+        <div class="card-price">150 ₽</div>
       </div>
       <div class="glass-card">
-        <span class="card-icon">🍹</span>
-        <div class="card-name">Сок</div>
-        <div class="card-desc">Натуральный сок на выбор. 1 литр.</div>
-        <div class="card-price">120 ₽</div>
+        <span class="card-icon">⚡</span>
+        <div class="card-name">Dizzy</div>
+        <div class="card-desc">Энергетический напиток для долгих вечеров.</div>
+        <div class="card-price">100 ₽</div>
       </div>
     </div>
   </div>
@@ -541,7 +650,26 @@
 
 
 <script>
-/* ── SCROLL BAR ── */
+/* ── OPEN / CLOSED STATUS ── */
+(function updateStatus() {
+  const dot = document.getElementById('status-dot');
+  const text = document.getElementById('status-text');
+  const now = new Date();
+  const h = now.getHours();
+  // Open: 22:00–04:00 (h >= 22 OR h < 4)
+  const isOpen = h >= 22 || h < 4;
+  if (isOpen) {
+    dot.classList.remove('closed');
+    text.textContent = 'ежедневно с 20:00 до 4:00';
+  } else {
+    dot.classList.add('closed');
+    text.textContent = 'закрыто · открываемся в 20:00';
+  }
+  // Re-check every minute
+  setTimeout(updateStatus, 60000);
+})();
+
+
 window.addEventListener('scroll', () => {
   const p = window.scrollY / (document.body.scrollHeight - window.innerHeight);
   document.getElementById('scroll-bar').style.width = (p * 100) + '%';
@@ -622,7 +750,7 @@ const observer = new IntersectionObserver(entries => {
     }
   });
 }, { threshold: .15 });
-document.querySelectorAll('.glass-card').forEach((el, i) => {
+document.querySelectorAll('.glass-card, .combo-card').forEach((el, i) => {
   el.style.animationDelay = (i % 3 * .12) + 's';
   observer.observe(el);
 });
